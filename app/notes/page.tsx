@@ -135,7 +135,7 @@ const Notes = () => {
             }}
           >
             <button
-              className="absolute top-0 right-0 mt-4 mr-4 text-gray-700 hover:text-gray-900"
+              className="absolute top-0 right-0 text-lg hover:bg-red-600 text-black hover:text-white cursor-pointer rounded-lg transition duration-300 ease-out"
               onClick={() => setPopupBool(false)}
             >
               <svg
@@ -167,11 +167,13 @@ const Notes = () => {
                 type="text"
                 className="block w-full p-2 border border-gray-300 rounded-md"
                 placeholder="Your note's title here"
+                required
                 onChange={(e) => setTitle(e.target.value)}
               />
               <textarea
                 className="block w-full p-2 border border-gray-300 rounded-md"
                 placeholder="Your note's content here"
+                required
                 onChange={(e) => setContent(e.target.value)}
               ></textarea>
               <button
