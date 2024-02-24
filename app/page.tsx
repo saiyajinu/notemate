@@ -1,6 +1,25 @@
-const page = () => {
+"use client"
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+const Home = () => {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    console.log(status);
+    
+    if (status === "authenticated") {
+      router.push("/notes");
+    }
+  });
+
   return (
     <>
+    {
+      status === "unauthenticated" ?
       <section className="">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center flex-col text-center py-12">
@@ -14,8 +33,11 @@ const page = () => {
           </div>
         </div>
       </section>
+      : <div className="m-auto text-center text-3xl font-bold">loading...</div>
+    }
+      
     </>
   );
 };
 
-export default page;
+export default Home;

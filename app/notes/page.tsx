@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Note from "@/components/Note";
 import NoteFilter from "@/components/NoteFilter";
+import { useRouter } from "next/navigation";
 
 const Notes = () => {
   const [popupBool, setPopupBool] = useState(false);
@@ -12,7 +13,7 @@ const Notes = () => {
   const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const createNote = async (e: any) => {
     e.preventDefault();
@@ -39,9 +40,29 @@ const Notes = () => {
     }
   };
 
-  const [userNotes, setUserNotes] = useState([]);
+  const deleteNote = async (noteid: string) => {
+    try {
+      if (session?.user) {
+        const res = await fetch(`/api/note/delete/${noteid}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          window.location.reload();
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const [userNotes, setUserNotes] = useState([]);
+  const router= useRouter()
   useEffect(() => {
+  
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+
     const fetchPosts = async (id: string | undefined) => {
       const response = await fetch(`/api/note/get/${id}`);
       const data = await response.json();
@@ -51,7 +72,7 @@ const Notes = () => {
     };
 
     if (session?.user) fetchPosts(session.user.id);
-  }, [session?.user, session?.user?.id]);
+  }, [session?.user, session?.user?.id, router, status]);
 
   const [filter, setFilter] = useState("");
 
@@ -72,6 +93,7 @@ const Notes = () => {
         {userNotes.filter(isNoteMatchingFilter).map((note: any) => {
           return (
             <Note
+              deleteNote={deleteNote}
               key={note._id}
               id={note._id}
               title={note.title}

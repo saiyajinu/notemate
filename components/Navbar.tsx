@@ -17,31 +17,6 @@ const Navbar = () => {
   }, []);
 
   const router = useRouter()
-
-  let navSignOut = () => {
-    signOut();
-    router.push('/')
-  }
-
-  const pathname = usePathname()
-
-  useEffect(() => {
-    if(session?.user){
-      if(pathname != '/notes'){
-        router.push('/notes')
-        console.log('reroute /n');
-        
-      }
-        
-    } 
-    else {
-      if(pathname != '/'){
-        router.push('/')  
-        console.log('reroute /');
-      }
-            
-    }
-  })
   
 
   return (
